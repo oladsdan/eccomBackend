@@ -48,11 +48,7 @@ export const handleRefreshToken = asyncHandler(async (req, res) => {
     const user = await userModel.findOne({refreshToken})
     if(!user) throw new Error('No Refresh token present in db or not matched')
     //verify the token
-    console.log(user.id)
-    console.log(user)
-    console.log(user.id == user._id)
     jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, decoded) => {
-        console.log(decoded.id)
         if(err || user.id !== decoded.id) {
             throw new Error("There is something wrong with refresh token")
         }
@@ -69,6 +65,22 @@ export const handleRefreshToken = asyncHandler(async (req, res) => {
         res.json({accessToken})
     })
     // res.json(user);
+})
+
+/**Logout Functionality */
+export const logout = asyncHandler(async (req, res) => {
+    const cookie = req.cookies;
+    if(!cookie?.refreshToken) throw new Error("No Refresh Token in cookies");
+    const refreshToken = cookie.refreshToken;
+    const user = await userModel.findOne({ refreshToken});
+    if(!user) {
+        res.clearCookie("refreshToken", { httpOnly:true, secure:true})
+        return res.sendStatus(204); //forbidden
+    }
+    await userModel.findOneAndUpdate({refreshToken : ""})
+    res.clearCookie("refreshToken", { httpOnly:true, secure:true})
+    return res.sendStatus(204)
+
 })
 
 
