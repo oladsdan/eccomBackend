@@ -4,6 +4,7 @@ import asyncHandler from "express-async-handler";
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv'
 import generateRefreshToken from "../config/refreshToken.js";
+import cookie from "cookie-parser";
 dotenv.config();
 
 export const register = asyncHandler( async (req, res) => {
@@ -84,12 +85,14 @@ export const Login = asyncHandler( async (req, res) => {
                     { expiresIn: '1m'}
                 )
 
-                const refreshToken = generateRefreshToken(registeredUser?._id)
+                const refreshToken = await generateRefreshToken(registeredUser?._id)
                 // then we save the refreshToken in the database
                 registeredUser.refreshToken = refreshToken;
                 const result = await registeredUser.save();
+                // console.log(result)
 
-                res.cookie('jwt', refreshToken, { httpOnly : true, sameSite: 'None', secure: true, maxAge: 24 * 60 * 60* 1000} )
+                // res.cookie('jwt', refreshToken, { httpOnly : true, sameSite: 'None', secure: true, maxAge: 24 * 60 * 60* 1000} )
+                res.cookie('refreshToken', refreshToken, { httpOnly : true, maxAge: 24 * 60 * 60* 1000} )
             
                 return res.status(201).json({'message': "you are logged", 
                                              'Accesstoken':accessToken})
