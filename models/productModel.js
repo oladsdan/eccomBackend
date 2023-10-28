@@ -7,7 +7,7 @@ const productSchema = new mongoose.Schema({
         required:true,
         
     },
-    Slug:{
+    slug:{
         type:String,
         required:true,
         
@@ -17,19 +17,22 @@ const productSchema = new mongoose.Schema({
         required:true,
         
     },
-    Price:{
+    price:{
         type:Number,
         required:true
     },
     category: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Category"
+        type: String,
+        required: true
     },
     brand: {
         type: String,
-        enum : ["Apple", "Samsung", "Lenovo"]
+        required: true
     },
-    quantity: Number,
+    quantity: {
+        type: Number,
+        required: true
+    },
     sold: {
         type: Number,
         default: 0
@@ -39,7 +42,7 @@ const productSchema = new mongoose.Schema({
     },
     color: {
         type: String,
-        enum: ["Black", "Brown", "Red"],
+        required: true,
     },
     ratings: {
         star: Number,
@@ -51,6 +54,6 @@ const productSchema = new mongoose.Schema({
 
 // //Export the model
 // module.exports = mongoose.model('Product', productSchema);
-const productModel = mongoose.model('Product', userSchema);
+const productModel = mongoose.model('Product', productSchema);
 
 export default productModel

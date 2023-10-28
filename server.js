@@ -5,6 +5,7 @@ import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import { errorHandler, notFound } from "./middleware/errorHandler.js";
 import cookieParser from "cookie-parser";
+import productRoutes from './routes/productRoutes.js'
 
 
 dotenv.config();
@@ -25,6 +26,8 @@ app.use(express.json())
 
 app.use('/api', authRoutes)
 app.use('/users', userRoutes)
+// api for products
+app.use('/api/product', productRoutes)
 
 //middleware
 
