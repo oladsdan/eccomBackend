@@ -6,6 +6,7 @@ import userRoutes from './routes/userRoutes.js';
 import { errorHandler, notFound } from "./middleware/errorHandler.js";
 import cookieParser from "cookie-parser";
 import productRoutes from './routes/productRoutes.js'
+import morgan from "morgan";
 
 
 dotenv.config();
@@ -13,7 +14,9 @@ dotenv.config();
 const PORT = process.env.PORT || 4000;
 const app = express();
 
+
 //built in middleware to enable urlencoded data
+app.use(morgan("dev"))
 app.use(express.urlencoded({ extended: false}))
 app.use(cookieParser());
 
