@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import crypto from "crypto";
 
 // Declare the Schema of the Mongo model
 const userSchema = new mongoose.Schema({
@@ -50,7 +51,7 @@ const userSchema = new mongoose.Schema({
 
 }, {timestamps: true});
 
-//** another way to encrypt password using bcrypt */
+//** another way to encrypt password using bcrypt in the model schema*/
 // userSchema.pre("save", async function(next){
 //     const salt = await bcrypt.genSaltSync(10);
 //     this.password = await bcrypt.hash(this.password, salt);
@@ -61,6 +62,13 @@ const userSchema = new mongoose.Schema({
 //     return await bcrypt.compare(enterPassword, this.password)
 // }
 
-//Export the model
+//method for creating Password Reset Token
+userSchema.methods.createPasswordResetToken = async () => {
+    const resetToken = crypto.randomBytes(32).toString("hex");
+    this.passwordResetToken = crypto.createHash("sha256").update(resetToken).digest("hex");
+    this.passwordResetExpires = Date.now() * 30 * 60 *1000; // 10 minutes
+}
+
+//Export the model 
 const userModel = mongoose.model('User', userSchema);
 export default userModel

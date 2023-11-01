@@ -5,6 +5,7 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv'
 import generateRefreshToken from "../config/refreshToken.js";
 import cookie from "cookie-parser";
+import validateDBid from "../utils/validateDBid.js";
 dotenv.config();
 
 export const register = asyncHandler( async (req, res) => {
@@ -110,4 +111,34 @@ export const Login = asyncHandler( async (req, res) => {
         res.status(500).json({ error : error.message});
         
     }
+})
+
+
+export const forgetPassword = asyncHandler( async (req, res) => {
+    //find the id from the user through authmiddleware
+    const {_id} = req.user;
+    const {password} = req.body;
+    //we find if the id with user truly exist
+    validateDBid(_id);
+    if(password){
+        try {
+            const user = await userModel.findById(_id);
+            //encrypt the password
+            const newSalt = await bcrypt.genSaltSync(10);
+            const newPassword = await bcrypt.hash(password, newSalt);
+            //we save the new passwoed
+            user.password = newPassword;
+            const updatedPassword = await user.save();
+            // return the res
+            res.json(updatedPassword)
+            
+        } catch (error) {
+            throw new Error
+            
+        }
+    }else{
+        res.jsos({"message": "type a valid password"})
+    }
+
+
 })
