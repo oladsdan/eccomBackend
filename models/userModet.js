@@ -42,7 +42,11 @@ const userSchema = new mongoose.Schema({
     
     refreshToken: {
         type: String
-    }
+    },
+    //models for reseting passwords
+    passwordChangedAt : Date,
+    passwordResetToken: String,
+    passwordResetExpires: Date
 
 }, {timestamps: true});
 
