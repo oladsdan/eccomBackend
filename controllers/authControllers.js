@@ -6,7 +6,9 @@ import dotenv from 'dotenv'
 import generateRefreshToken from "../config/refreshToken.js";
 import cookie from "cookie-parser";
 import validateDBid from "../utils/validateDBid.js";
+import crypto from "crypto"
 dotenv.config();
+
 
 export const register = asyncHandler( async (req, res) => {
     try {
@@ -141,4 +143,55 @@ export const forgetPassword = asyncHandler( async (req, res) => {
     }
 
 
+})
+
+export const resetPassword = asyncHandler( async (req, res) => {
+    //first we need the email
+    const {email} = req.body;
+    // then we find the user if it exist
+    const user = await userModel.findOne({ email });
+    if(!user) throw new Error('User not found with this email');
+    try {
+        //first we create a token
+        const token = await user.createPasswordResetToken();
+        await user.save();
+        
+        //then we create a URLReset
+        const resetUrl = `Hi, please follow this link to reset your password. this link is valid till 10min from now, <a href='http://localhost:5000/api/reset-password/${token}'> Click Here</a>`
+        const date = {
+            to: email,
+            text: "Hey User",
+            subject: "forgot password link",
+            html: resetUrl,
+        };
+        sendEmail(data);
+        res.json(token)
+        
+    } catch (error) {
+        throw new Error(error)
+    }
+
+
+})
+
+export const resetPasswordToken = asyncHandler(async (req, res) => {
+    const { password } = req.body;
+    //hashed the password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt)
+
+    const { token } = req.params;
+    // then we hash the token
+    const hashedToken = crypto.createHash('sha256').update(token).digest("hex")
+    // then we find the user from db
+    const user = await userModel.findOne({
+        passwordResetToken: hashedToken,
+        passwordResetExpires: {$gt : Date.now()}
+    })
+    if(!user) throw new Error(" Token Expired, please try again later");
+    user.password = hashedPassword;
+    user.passwordResetToken = undefined;
+    user.passwordResetExpires = undefined;
+    await user.save();
+    res.json(user)
 })
