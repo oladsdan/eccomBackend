@@ -23,7 +23,7 @@ export const register = asyncHandler( async (req, res) => {
             const salt = await bcrypt.genSalt();
             const passwordHash = await bcrypt.hash(password, salt)
             const newUser = new userModel({...createUser, password: passwordHash})
-            console.log(newUser)
+            // console.log(newUser)
             const savedUser = await newUser.save();
             res.status(201).json({'message': `${lastname}, your profile with ${email} was created `})
         } else{

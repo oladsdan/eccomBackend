@@ -7,6 +7,7 @@ import { errorHandler, notFound } from "./middleware/errorHandler.js";
 import cookieParser from "cookie-parser";
 import productRoutes from './routes/productRoutes.js'
 import morgan from "morgan";
+import blogRoutes from './routes/blogRoutes.js';
 
 
 dotenv.config();
@@ -31,6 +32,9 @@ app.use('/api', authRoutes)
 app.use('/users', userRoutes)
 // api for products
 app.use('/api/product', productRoutes)
+
+//blogs
+app.use('/api/blog', blogRoutes)
 
 //middleware
 
