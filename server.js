@@ -8,6 +8,10 @@ import cookieParser from "cookie-parser";
 import productRoutes from './routes/productRoutes.js'
 import morgan from "morgan";
 import blogRoutes from './routes/blogRoutes.js';
+import productCategoryRoutes from './routes/productCategoryRoutes.js';
+import blogCategoryRoutes from './routes/blogCategoryRoutes.js';
+import brandRoutes from './routes/brandRoutes.js';
+
 
 
 dotenv.config();
@@ -36,6 +40,10 @@ app.use('/api/product', productRoutes)
 //blogs
 app.use('/api/blog', blogRoutes)
 
+//category routes
+app.use('/api/category', productCategoryRoutes)
+app.use('/api/blog-category', blogCategoryRoutes)
+app.use('/api/brand', brandRoutes)
 //middleware
 
 
