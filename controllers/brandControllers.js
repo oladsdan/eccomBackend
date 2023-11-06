@@ -61,4 +61,5 @@ export const getAllBrand = asyncHandler(async (req, res) => {
         
     }
 })
+ 
 

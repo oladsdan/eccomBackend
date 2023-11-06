@@ -1,6 +1,7 @@
 import productModel from "../models/productModel.js";
 import asyncHandler from "express-async-handler";
 import slugify from "slugify";
+import userModel from "../models/userModet.js";
 
 export const createProduct = asyncHandler( async (req, res) => {
     const product = req.body
@@ -126,4 +127,31 @@ export const getAllProduct = asyncHandler(async (req, res) => {
         throw new Error (error)
         
     }
+})
+
+export const addToWishList = asyncHandler (async (req, res) => {
+    //first we deconstruct the id from body
+    const {_id} = req.user;
+    const { prodId} = req.body;
+    try{
+        const user = await userModel.findById(_id);
+        // then we check if the user already has a wishlist id
+        const wishlistAdded = user?.wishlist.find((id) => id.toString() === prodId.toString())
+        if (wishlistAdded){
+            let user = await userModel.findByIdAndUpdate(_id, {
+                $pull: { wishlist : prodId}
+            }, {new: true})
+            res.json(user);
+ 
+        }else {
+            let user = await userModel.findByIdAndUpdate(_id, {
+                $push: { wishlist : prodId}
+            }, {new: true})
+            res.json(user);
+
+        }
+    } catch (error){
+        throw new Error(error)
+    } 
+    
 })

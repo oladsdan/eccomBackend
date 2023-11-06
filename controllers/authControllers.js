@@ -85,7 +85,7 @@ export const Login = asyncHandler( async (req, res) => {
                         }
                     },
                     process.env.ACCESS_TOKEN_SECRET,
-                    { expiresIn: '1m'}
+                    { expiresIn: '1d'}
                 )
 
                 const refreshToken = await generateRefreshToken(registeredUser?._id)

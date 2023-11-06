@@ -5,7 +5,7 @@ import { createBrand, deleteBrand, getABrand, getAllBrand, updateBrand } from ".
 
 const router = express.Router();
 
-router.post('/new-category',authMiddleware, isAdmin, createBrand);
+router.post('/new-brand',authMiddleware, isAdmin, createBrand);
 router.put('/:id', authMiddleware, isAdmin, updateBrand)
 router.delete('/:id', authMiddleware, isAdmin, deleteBrand)
 router.get('/:id', getABrand)
