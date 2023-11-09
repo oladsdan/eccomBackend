@@ -11,6 +11,7 @@ import blogRoutes from './routes/blogRoutes.js';
 import productCategoryRoutes from './routes/productCategoryRoutes.js';
 import blogCategoryRoutes from './routes/blogCategoryRoutes.js';
 import brandRoutes from './routes/brandRoutes.js';
+import couponRoutes from './routes/couponRoutes.js';
 
 
 
@@ -44,6 +45,7 @@ app.use('/api/blog', blogRoutes)
 app.use('/api/category', productCategoryRoutes)
 app.use('/api/blog-category', blogCategoryRoutes)
 app.use('/api/brand', brandRoutes)
+app.use('/api/coupon', couponRoutes)
 //middleware
 
 
